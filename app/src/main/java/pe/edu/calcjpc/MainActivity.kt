@@ -38,13 +38,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-CalcUPeU()
+            CalcUPeU()
 
             /*CalcjpcTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -97,6 +101,14 @@ fun ButtonX(
                             valor += valuex
                             onValueChange.invoke(valor)
                         }
+
+                        when (valuex) {
+
+                            "√" -> onValueChange.invoke(sqrt(textState.toDouble()).toString())
+                            "1/x" -> onValueChange.invoke((1 / textState.toDouble()).toString())
+                            "π" -> onValueChange.invoke(PI.toString())
+                            "|x|" -> onValueChange.invoke(abs(textState.toDouble()).toString())
+                        }
                         if (valuex.equals("+") || valuex.equals("-") || valuex.equals("*") || valuex.equals(
                                 "/"
                             ) || valuex.equals("%")
@@ -121,6 +133,11 @@ fun ButtonX(
                                 onValueChange.invoke(dot)
                             }
                         }
+                        if (valuex.equals("^")) {
+                            onOpChange.invoke(valuex) // Guarda el operador "^"
+                            onOldValueChange.invoke(textState) // Guarda la base
+                            onIsNewOpChange.invoke(true) // Prepara el campo para el exponente
+                        }
                         if (valuex.equals("=")) {
                             if (oldTextState.isNotEmpty()) {
                                 var finalNumber = 0.0
@@ -137,6 +154,7 @@ fun ButtonX(
                                     "-" -> {
                                         finalNumber = oldTextState.toDouble() - textState.toDouble()
                                     }
+                                    "^" -> finalNumber = oldTextState.toDouble().pow(textState.toDouble()) // Potencia
                                 }
                                 onValueChange.invoke(finalNumber.toString())
                                 onIsNewOpChange.invoke(true)
@@ -241,7 +259,8 @@ fun CalcUPeU() {
                 var listC = listOf<String>("4", "5", "6", "+")
                 var listD = listOf<String>("1", "2", "3", "-")
                 var listE = listOf<String>("0", "=")
-                var listaCompleta = listOf<List<String>>(listA, listB, listC, listD, listE)
+                val listExtra = listOf("^", "√", "1/x", "π", "|x|")
+                var listaCompleta = listOf<List<String>>(listA, listB, listC, listD, listE, listExtra)
                 listaCompleta.forEach {
                     CalculatorFirstRow(
                         isNewOp = isNewOp,
@@ -280,3 +299,4 @@ fun GreetingPreview() {
     }
 }
 
+//Henyel paso por aqui
